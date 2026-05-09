@@ -19,12 +19,16 @@ const userSchema = new mongoose.Schema({
       default: '',
     },
     verifyOtpExpireAt: {
-      type: String,
+      type: String,    //should be the Number 
       default: 0,
     },
     isAcountVerified: {
       type: Boolean,
       default: false,
+    },
+    resetOtp: {
+      type: String,
+      default: '',
     },
     resetOtpExpireAt: {
       type: Number,

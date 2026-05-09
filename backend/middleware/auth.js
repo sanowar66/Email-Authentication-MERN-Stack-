@@ -1,33 +1,30 @@
-// import jwt from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 
-// const authMiddleware = (req, res, next) => {
-//   const authHeader = req.headers.authorization;
+const auth = (req, res, next) => {
+  const { token } = req.cookies;
 
-//   if (!authHeader) {
-//     return res.status(401).json({
-//       message: "Unauthorized"
-//     });
-//   }
+  if (!token) {
+    return res.status(401).json({ success: false, message: "Not Authorized" });
+  }
+  try {
+    const tokendecode = jwt.verify(token, process.env.JWT_SECRET);
 
-//   const token = authHeader.split(" ")[1];
+    if (tokendecode.id) {
+      req.userId = tokendecode.id;
+    } else {
+      return res
+        .status(401)
+        .json({ success: false, message: "Not Authorized" });
+    }
+    next();
+  } catch (error) {
+    console.log(error.message);
 
-//   if (!token) {
-//     return res.status(401).json({
-//       message: "Unauthorized"
-//     });
-//   }
+    return res.status(401).json({
+      success: false,
+      message: "Invalid Token",
+    });
+  }
+};
 
-//   jwt.verify(token, process.env.JWT_SECRET, (err, payload) => {
-//     if (err) {
-//       return res.status(401).json({
-//         message: "Unauthorized"
-//       });
-//     }
-
-//     req.user = payload;
-
-//     next();
-//   });
-// };
-
-// export default authMiddleware;
+export default auth;
