@@ -1,15 +1,55 @@
-import React from "react";
+import React, { useContext } from "react";
 import { assets } from "../assets/assets";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-
+import { AppContent } from "../context/AppContext";
+import axios from "axios";
+import { toast } from "react-toastify";
 function Login() {
+  const navigate = useNavigate();
   const [state, setState] = useState("Sign Up");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  const navigate = useNavigate();
+  const { backendUrl, setIsLoggedin, getUserData } = useContext(AppContent);
+
+  const handleSubmit = async (e) => {
+    try {
+      e.preventDefault();
+      axios.defaults.withCredentials = true;
+
+      if (state === "Sign Up") {
+        const { data } = await axios.post(backendUrl + "/api/auth/register", {
+          name,
+          email,
+          password,
+        });
+        if (data.success) {
+          setIsLoggedin(true);
+          getUserData();
+          navigate("/");
+        } else {
+          toast.error(data.message);
+        }
+      } else {
+        const { data } = await axios.post(backendUrl + "/api/auth/login", {
+          email,
+          password,
+        });
+        if (data.success) {
+          setIsLoggedin(true);
+          getUserData();
+          navigate("/");
+        } else {
+          toast.error(data.message);
+        }
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen px-6 sm:px-0 bg:gradient-to-br from-blue-200 to-purple-400">
       <img
@@ -29,7 +69,7 @@ function Login() {
             : "Login to your account"}
         </p>
 
-        <form action="">
+        <form onSubmit={handleSubmit}>
           {state === "Sign Up" && (
             <div className="mb-4 flex items-center gap-3 w-full px-5 py-2.5 rounded-full ng-[#333A5C]">
               <img src={assets.person_icon} alt="" />
@@ -82,7 +122,10 @@ function Login() {
           <>
             <p className="text-gray-400 text-center text-xs mt-4">
               Already have an account?{" "}
-              <span className="text-blue-400 cursor-pointer underline">
+              <span
+                onClick={() => setState("Login")}
+                className="text-blue-400 cursor-pointer underline"
+              >
                 Login here
               </span>
             </p>
@@ -91,7 +134,10 @@ function Login() {
           <>
             <p className="text-gray-400 text-center text-xs mt-4">
               Don't have an account?{" "}
-              <span className="text-blue-400 cursor-pointer underline">
+              <span
+                onClick={() => setState("Sign Up")}
+                className="text-blue-400 cursor-pointer underline"
+              >
                 Sign Up
               </span>
             </p>
