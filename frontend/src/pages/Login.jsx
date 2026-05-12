@@ -38,6 +38,7 @@ function Login() {
           password,
         });
         if (data.success) {
+          // localStorage.setItem("token", data.token);
           setIsLoggedin(true);
           getUserData();
           navigate("/");
@@ -46,7 +47,7 @@ function Login() {
         }
       }
     } catch (error) {
-      console.log(error);
+      toast.error(error.message);
     }
   };
 
