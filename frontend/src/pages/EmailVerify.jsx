@@ -55,9 +55,9 @@ function EmailVerify() {
       toast.error(error.message);
     }
   };
-// useEffect(()=>{
-//   isLoggedin && userData && userData.isAcountVerified && navigate('/')
-// },[isLoggedin,userData])
+  // useEffect(()=>{
+  //   isLoggedin && userData && userData.isAcountVerified && navigate('/')
+  // },[isLoggedin,userData])
   return (
     <div className="flex items-center justify-center min-h-screen  bg:gradient-to-br from-blue-200 to-purple-400">
       <img
@@ -74,7 +74,7 @@ function EmailVerify() {
           Email Verify OTP{" "}
         </h1>
         <p className="text-center mb-6 text-indigo-300">
-          Enter the 6-digit <code> sent to your email id.</code>
+          Enter the 6-digit sent to your email id.
         </p>
         <div className="flex justify-between mb-8" onPaste={handlePaste}>
           {Array(6)

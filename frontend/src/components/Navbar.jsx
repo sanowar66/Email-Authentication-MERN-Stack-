@@ -22,7 +22,7 @@ const Navbar = () => {
         toast.error(data.message);
       }
     } catch (error) {
-       toast.error(error.message);
+      toast.error(error.message);
     }
   };
 
